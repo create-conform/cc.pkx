@@ -1,0 +1,45 @@
+[submodule "cc.type"]
+	path = cc.type
+	url = https://github.com/create-conform/cc.type
+[submodule "cc.validate"]
+	path = cc.validate
+	url = https://github.com/create-conform/cc.validate
+[submodule "cc.string"]
+	path = cc.string
+	url = https://github.com/create-conform/cc.string
+[submodule "cc.host"]
+	path = cc.host
+	url = https://github.com/create-conform/cc.host
+[submodule "cc.io"]
+	path = cc.io
+	url = https://github.com/create-conform/cc.io
+[submodule "cc.io.format.tar"]
+	path = cc.io.format.tar
+	url = https://github.com/create-conform/cc.io.format.tar
+[submodule "cc.log"]
+	path = cc.log
+	url = https://github.com/create-conform/cc.log
+[submodule "cc.object"]
+	path = cc.object
+	url = https://github.com/create-conform/cc.object
+[submodule "cc.boolean"]
+	path = cc.boolean
+	url = https://github.com/create-conform/cc.boolean
+[submodule "cc.array"]
+	path = cc.array
+	url = https://github.com/create-conform/cc.array
+[submodule "cc.event"]
+	path = cc.event
+	url = https://github.com/create-conform/cc.event
+[submodule "cc.inflate"]
+	path = cc.inflate
+	url = https://github.com/create-conform/cc.inflate
+[submodule "cc.io.format.gzip"]
+	path = cc.io.format.gzip
+	url = https://github.com/create-conform/cc.io.format.gzip
+[submodule "cc.version"]
+	path = cc.version
+	url = https://github.com/create-conform/cc.version
+[submodule "cc.cli"]
+	path = cc.cli
+	url = https://github.com/create-conform/cc.cli

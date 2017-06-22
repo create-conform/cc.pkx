@@ -777,7 +777,7 @@
             var reposSorted = version.sort(repositories, "desc");
             for (var r in reposSorted) {
                 if (selector.package.indexOf(reposSorted[r] + ".") == 0) {
-                    repository = { "namespace" : r, "url" : repositories[reposSorted[r]] };
+                    repository = { "namespace" : reposSorted[r], "url" : repositories[reposSorted[r]] };
                 }
             }
             if (!repository) {

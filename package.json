@@ -1,6 +1,6 @@
 {
   "name": "cc.pkx",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "title": "PKX Module Library",
   "description": "Library for loading PKX modules, and working with PKX packages.",
   "main": "pkx.js",

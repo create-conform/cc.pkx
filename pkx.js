@@ -777,20 +777,20 @@
             var reposSorted = version.sort(repositories, "desc");
             for (var r in reposSorted) {
                 if (selector.package.indexOf(reposSorted[r] + ".") == 0) {
-                    repository = repositories[reposSorted[r]];
+                    repository = { "namespace" : r, "url" : repositories[reposSorted[r]] };
                 }
             }
             if (!repository) {
-                repository = self.repositoryURL;
+                repository = { "namespace" : "", "url" : self.repositoryURL };
             }
-            repository = replaceVariables(repository);
+            repository.url = replaceVariables(repository.url);
 
             try {
                 if (host.runtime == host.RUNTIME_NODEJS) {
-                    own.uri = require("url").resolve(repository != ""? repository : process.cwd() + require("path").sep, selector.package);
+                    own.uri = require("url").resolve(repository.url != ""? repository.url : process.cwd() + require("path").sep, selector.package);
                 }
                 else {
-                    own.uri = repository + selector.package;
+                    own.uri = repository.url + selector.package;
                 }
             }
             catch (e) {

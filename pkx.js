@@ -774,19 +774,25 @@
             }
 
             // find repository
-            var reposSorted = version.sort(repositories, "desc");
-            for (var r in reposSorted) {
-                if (selector.package.indexOf(reposSorted[r] + ".") == 0) {
-                    repository = { "namespace" : reposSorted[r], "url" : repositories[reposSorted[r]] };
+            var protocolDetected = selector.package.indexOf("://") != -1;
+            if (protocolDetected) {
+                repository = {"namespace": "", "url": ""};
+            }
+            else {
+                var reposSorted = version.sort(repositories, "desc");
+                for (var r in reposSorted) {
+                    if (selector.package.indexOf(reposSorted[r] + ".") == 0) {
+                        repository = {"namespace": reposSorted[r], "url": repositories[reposSorted[r]]};
+                    }
                 }
+                if (!repository) {
+                    repository = {"namespace": "", "url": self.repositoryURL};
+                }
+                repository.url = replaceVariables(repository.url);
             }
-            if (!repository) {
-                repository = { "namespace" : "", "url" : self.repositoryURL };
-            }
-            repository.url = replaceVariables(repository.url);
 
             try {
-                if (host.runtime == host.RUNTIME_NODEJS) {
+                if (host.runtime == host.RUNTIME_NODEJS && !protocolDetected) {
                     own.uri = require("url").resolve(repository.url != ""? repository.url : process.cwd() + require("path").sep, selector.package);
                 }
                 else {

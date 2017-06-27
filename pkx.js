@@ -187,6 +187,9 @@
                                 }
 
                                 // modify package url if parent is not an archive (for debugging)
+                                // fix this code below if you want non-archive packages to load it's dependencies directly from the code in the subfolders instead of fetching from repo.
+                                // The reason the code below is commented, is because if you use embedded packages the code below breaks it.
+                                // Specifically in node.js.
                                 /*if (!selector.isArchive) {
                                     var name = "";
                                     var nameParts = requests[d].package.substr(requests[d].package.lastIndexOf("/") + 1).split(".");
@@ -301,7 +304,7 @@
                                         }
                                         complete(null, null, true);
                                     }
-                                    else if (host.isRuntimeBrowserFamily()) {
+                                    else if (host.isRuntimeBrowserFamily() || host.runtime == host.RUNTIME_NWJS) {
                                         var script = document.createElement("script");
                                         script.language = "javascript";
                                         script.type = "text/javascript";

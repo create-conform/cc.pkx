@@ -182,12 +182,12 @@
                                 if (requests[d].package.substr(0, 2) == "./") {
                                     requests[d].package = "pkx:///" + volume.pkx.id + (requests[d].package.length > 2 ? "/" + requests[d].package.substr(2) : "");
                                 }
-                                if (volume.localId.lastIndexOf("/") == volume.localId.length - 1) {
+                                else if (volume.localId.lastIndexOf("/") == volume.localId.length - 1) {
                                     requests[d].package = "pkx:///" + volume.pkx.id + "/" + requests[d].package;
                                 }
 
                                 // modify package url if parent is not an archive (for debugging)
-                                if (!selector.isArchive) {
+                                /*if (!selector.isArchive) {
                                     var name = "";
                                     var nameParts = requests[d].package.substr(requests[d].package.lastIndexOf("/") + 1).split(".");
                                     for (var i = 0; i < nameParts.length; i++) {
@@ -196,7 +196,7 @@
                                         }
                                     }
                                     requests[d].package = requests[d].package.substr(0, requests[d].package.lastIndexOf("/") + 1) + name + "/";
-                                }
+                                }*/
                             }
                         }
 
@@ -293,7 +293,7 @@
                                     // load code
                                     if (host.runtime == host.RUNTIME_NODEJS) {
                                         try {
-                                            require("vm").runInThisContext(require("module").wrap(data), {filename: resource})(exports, require, module, __filename, __dirname);
+                                            require("vm").runInThisContext(require("module").wrap(data), {filename: resource})(exports, require.original, module, __filename, __dirname);
                                         }
                                         catch (e) {
                                             error(e);
@@ -775,7 +775,7 @@
 
             // find repository
             var protocolDetected = selector.package.indexOf("://") != -1;
-            if (protocolDetected) {
+            if (protocolDetected || (host.runtime == host.RUNTIME_NODEJS && selector.package.indexOf(".") == 0)) {
                 repository = {"namespace": "", "url": ""};
             }
             else {

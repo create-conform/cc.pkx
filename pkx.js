@@ -796,8 +796,7 @@
 
             try {
                 if (host.runtime == host.RUNTIME_NODEJS && !protocolDetected) {
-                    var u = require("url").resolve(repository.url != ""? repository.url : process.cwd() + require("path").sep, selector.package);
-                    own.uri = (u.substr(0) != "/" && u.indexOf("://") == -1)? "/" + u : u;
+                    own.uri = require("url").resolve(repository.url != ""? repository.url : "/" + process.cwd() + require("path").sep, selector.package);
                 }
                 else {
                     own.uri = repository.url + selector.package;

@@ -778,7 +778,7 @@
 
             // find repository
             var protocolDetected = selector.package.indexOf("://") != -1;
-            if (protocolDetected || (host.runtime == host.RUNTIME_NODEJS && selector.package.indexOf(".") == 0)) {
+            if (protocolDetected || ((host.runtime == host.RUNTIME_NODEJS || host.runtime == host.RUNTIME_NWJS) && selector.package.indexOf(".") == 0)) {
                 repository = {"namespace": "", "url": ""};
             }
             else {

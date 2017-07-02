@@ -795,7 +795,7 @@
             }
 
             try {
-                if (host.runtime == host.RUNTIME_NODEJS && !protocolDetected) {
+                if ((host.runtime == host.RUNTIME_NODEJS || host.runtime == host.RUNTIME_NWJS) && !protocolDetected) {
                     own.uri = require("url").resolve(repository.url != ""? repository.url : "/" + process.cwd() + require("path").sep, selector.package);
                 }
                 else {

@@ -796,7 +796,17 @@
 
             try {
                 if ((host.runtime == host.RUNTIME_NODEJS || host.runtime == host.RUNTIME_NWJS) && !protocolDetected) {
-                    own.uri = require("url").resolve(repository.url != ""? repository.url : "/" + process.cwd() + require("path").sep, selector.package);
+                    console.log("REPO URL:", repository.url);
+                    var cwd = process.cwd();
+                    cwd = cwd.indexOf("/") == 0? cwd : ("/" + cwd);
+                    own.uri = require("url").resolve(repository.url != ""? repository.url : cwd + require("path").sep, selector.package);
+                    //overriding the scheme for nw.js
+                    if (own.uri.scheme == "chrome-extension") {
+                        own.uri.scheme = "file";
+                        own.uri.authority.userInfo = null;
+                        own.uri.authority.host = null;
+                    }
+                    console.log("REPO URI:", JSON.stringify(own.uri));
                 }
                 else {
                     own.uri = repository.url + selector.package;

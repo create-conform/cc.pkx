@@ -209,6 +209,11 @@
                             return;
                         }
                         using.apply(this, requests).then(getResourceFromVolume, function(loader) {
+                            if (selector.optional) {
+                                // gracefully stop
+                                callback();
+                                return;
+                            }
                             error(new Error(self.ERROR_DEPENDENCY, "", loader));
                         }, true);
                     }

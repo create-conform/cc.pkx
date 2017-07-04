@@ -209,9 +209,18 @@
                             return;
                         }
                         using.apply(this, requests).then(getResourceFromVolume, function(loader) {
-                            if (loader.request.optional) {
-                                // gracefully stop
-                                callback(null, true);
+                            var halt;
+                            var mods = [];
+                            for (var r in loader.requests) {
+                                if (loader.requests[r].err.length > 0 && !loader.requests[r].request.optional) {
+                                    halt = true;
+                                }
+                                else {
+                                    mods.push(loader.requests[r].module);
+                                }
+                            }
+                            if (!halt) {                                  
+                                getResourceFromVolume.apply(this, mods);
                                 return;
                             }
                             error(new Error(self.ERROR_DEPENDENCY, "", loader));

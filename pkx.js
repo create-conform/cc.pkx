@@ -209,7 +209,7 @@
                             return;
                         }
                         using.apply(this, requests).then(getResourceFromVolume, function(loader) {
-                            if (selector.optional) {
+                            if (loader.request.optional) {
                                 // gracefully stop
                                 callback(null, true);
                                 return;

@@ -20,6 +20,7 @@
         var self = this;
 
         this.repositoryURL = "";
+        this.repositoryResolveLocal = false; // if set to true, dependencies will be resolved relative to root of package (embedded).
         if (!configuration && typeof define != "undefined" && define.parameters.configuration) {
             configuration = define.parameters.configuration;
         }
@@ -182,7 +183,7 @@
                                 if (requests[d].package.substr(0, 2) == "./") {
                                     requests[d].package = "pkx:///" + volume.pkx.id + (requests[d].package.length > 2 ? "/" + requests[d].package.substr(2) : "");
                                 }
-                                else if (volume.localId.lastIndexOf("/") == volume.localId.length - 1) {
+                                else if (volume.localId.lastIndexOf("/") == volume.localId.length - 1 && self.repositoryResolveLocal) {
                                     requests[d].package = "pkx:///" + volume.pkx.id + "/" + requests[d].package;
                                 }
 

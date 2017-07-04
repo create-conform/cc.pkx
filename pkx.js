@@ -95,7 +95,7 @@
                 catch(e) {
                     if (selector.optional) {
                         // gracefully stop
-                        callback();
+                        callback(null, true);
                         return;
                     }
                     else {
@@ -211,7 +211,7 @@
                         using.apply(this, requests).then(getResourceFromVolume, function(loader) {
                             if (selector.optional) {
                                 // gracefully stop
-                                callback();
+                                callback(null, true);
                                 return;
                             }
                             error(new Error(self.ERROR_DEPENDENCY, "", loader));

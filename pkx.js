@@ -309,7 +309,7 @@
 
                                 if (ext == "js") {
                                     // load code
-                                    if (host.runtime == host.RUNTIME_NODEJS) {
+                                    if (host.isRuntimeNodeFamily() && !host.isRuntimeBrowserFamily()) {
                                         try {
                                             require("vm").runInThisContext(data, {filename: (selector.uri.scheme == "file"? process.cwd() : "") + resource, lineOffset: -1});
                                         }
@@ -319,7 +319,7 @@
                                         }
                                         complete(null, null, true);
                                     }
-                                    else if (host.isRuntimeBrowserFamily() || host.runtime == host.RUNTIME_NWJS) {
+                                    else if (host.isRuntimeBrowserFamily()) {
                                         var script = document.createElement("script");
                                         script.language = "javascript";
                                         script.type = "text/javascript";

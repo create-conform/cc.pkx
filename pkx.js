@@ -311,7 +311,7 @@
                                     // load code
                                     if (host.runtime == host.RUNTIME_NODEJS) {
                                         try {
-                                            require("vm").runInThisContext(require("module").wrap(data), {filename: (selector.uri.scheme == "file"? process.cwd() : "") + resource, lineOffset: -1})(exports, require.original, module, __filename, __dirname);
+                                            require("vm").runInThisContext(data, {filename: (selector.uri.scheme == "file"? process.cwd() : "") + resource, lineOffset: -1});
                                         }
                                         catch (e) {
                                             error(e);

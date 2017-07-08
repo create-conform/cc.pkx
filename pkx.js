@@ -569,7 +569,7 @@
                             if (Object.prototype.toString.call(dep) === "[object Object]") {
                                 resName = dep.package + (dep.resource ? dep.resource : "/");
                             }
-                            depStr += "\ndefine.parameters.dependencies.push(define.cache.get(\"" + resName +  "\", \"" + using.UPGRADABLE_PATCH + "\"));";
+                            depStr += "\ndefine.parameters.dependencies.push(define.cache.get(\"" + resName +  "\", \"" + using.UPGRADABLE_NONE + "\"));";
                         }
                     }
                 }
@@ -771,7 +771,7 @@
             this.wrap = selector.wrap || false;
             this.system = selector.system;
             this.optional = selector.optional || false;
-            this.upgradable = selector.upgradable || (using? using.UPGRADABLE_PATCH : null);
+            this.upgradable = selector.upgradable || (using? using.UPGRADABLE_NONE : null);
             this.ignoreDependencies = selector.ignoreDependencies || false;
             this.configuration = selector.configuration || null;
 

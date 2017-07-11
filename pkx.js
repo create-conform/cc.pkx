@@ -1157,9 +1157,9 @@
                 }
                 else {
                     volumes[own.pkx.id + " <" + volumes.length + ">"] = own;
-                    if (console) {
-                        console.warn("A PKXVolume with id '" + own.pkx.id + "' was already mounted and still present in cache.");
-                    }
+                    //if (console) {
+                    //    console.warn("A PKXVolume with id '" + own.pkx.id + "' was already mounted and still present in cache.");
+                    //}
                 }
             }
 

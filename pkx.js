@@ -573,7 +573,7 @@
                             if (Object.prototype.toString.call(dep) === "[object Object]") {
                                 resName = dep.package + (dep.resource ? dep.resource : "/");
                             }
-                            depStr += "\ndefine.parameters.dependencies.push(define.cache.get(\"" + resName +  "\", \"" + using.UPGRADABLE_NONE + "\"));";
+                            depStr += "\ndefine.parameters.dependencies.push(define.cache.get(\"" + resName +  "\"));";
                         }
                     }
                 }

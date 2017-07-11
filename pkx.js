@@ -187,8 +187,8 @@
                                     requests[d].package = "pkx:///" + volume.pkx.id + "/" + requests[d].package;
                                 }
 
-                                if (request[d].wrap) {
-                                    request[d].ignoreCache = true;
+                                if (requests[d].wrap) {
+                                    requests[d].ignoreCache = true;
                                 }
 
                                 // modify package url if parent is not an archive (for debugging)

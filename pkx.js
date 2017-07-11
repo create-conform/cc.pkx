@@ -187,6 +187,10 @@
                                     requests[d].package = "pkx:///" + volume.pkx.id + "/" + requests[d].package;
                                 }
 
+                                if (request[d].wrap) {
+                                    request[d].ignoreCache = true;
+                                }
+
                                 // modify package url if parent is not an archive (for debugging)
                                 // fix this code below if you want non-archive packages to load it's dependencies directly from the code in the subfolders instead of fetching from repo.
                                 // The reason the code below is commented, is because if you use embedded packages the code below breaks it.

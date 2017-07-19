@@ -370,16 +370,18 @@
                                     complete(json, dependencies);
                                 }
                                 if (ext == "css") {
-                                    var style = document.createElement("style");
-                                    style.rel = "stylesheet";
-                                    style.type = "text/css";
-                                    style.text = data;
-                                    try {
-                                        document.head.appendChild(style);
-                                    }
-                                    catch (e) {
-                                        error(e);
-                                        return;
+                                    if (typeof document !== "undefined") {
+                                        var style = document.createElement("style");
+                                        style.rel = "stylesheet";
+                                        style.type = "text/css";
+                                        style.text = data;
+                                        try {
+                                            document.head.appendChild(style);
+                                        }
+                                        catch (e) {
+                                            error(e);
+                                            return;
+                                        }
                                     }
                                     complete(null, null);
                                 }

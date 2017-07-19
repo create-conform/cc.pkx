@@ -123,9 +123,9 @@
                     if (selector.uri.scheme == "pkx") {
                         for (var v in volumes) {
                             if (selector.uri.path && volumes[v].pkx.id == selector.uri.path.substr(1)) {
-                                // skip to the good part (no dependency loading)
                                 pkxVolume = volumes[v];
-                                getResourceFromVolume();
+
+                                getPackageDependencies(pkxVolume);
                                 return;
                             }
                         }
@@ -180,15 +180,23 @@
                                 }
 
                                 // modify relative uri for embedded packages
+                                var embedded;
                                 if (requests[d].package.substr(0, 2) == "./") {
                                     requests[d].package = "pkx:///" + volume.pkx.id + (requests[d].package.length > 2 ? "/" + requests[d].package.substr(2) : "");
+                                    embedded = true;
                                 }
                                 else if (volume.localId.lastIndexOf("/") == volume.localId.length - 1 && self.repositoryResolveLocal) {
                                     requests[d].package = "pkx:///" + volume.pkx.id + "/" + requests[d].package;
+                                    embedded = true;
                                 }
 
                                 if (requests[d].wrap) {
                                     requests[d].ignoreCache = true;
+                                }
+
+                                // skip circular, embedded dependencies
+                                if (embedded && selector.uri.scheme == "pkx") {
+                                    requests[d] = null;
                                 }
 
                                 // modify package url if parent is not an archive (for debugging)
@@ -207,6 +215,15 @@
                                 }*/
                             }
                         }
+
+                        // filter out removed dependencies
+                        var filtered = [];
+                        for (var r in requests) {
+                            if (requests[r]) {
+                                filtered.push(requests[r]);
+                            }
+                        }
+                        requests = filtered;
 
                         if (typeof using === "undefined") {
                             error(new Error("It seems that using.js is missing. Please make sure it is loaded."));

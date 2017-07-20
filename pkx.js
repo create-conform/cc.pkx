@@ -70,6 +70,15 @@
 
         var INDENT_OFFSET = 4;
 
+        function findVolume(selector) {
+            var id = selector.package + "/" + (selector.resource? selector.resource : "");
+            for (var v in volumes) {
+                if (version.compare(id, v, selector.upgradable) || id == v) {
+                    return volumes[v];
+                }
+            }
+        }
+
         this.load = function(request, handler) {
             var loader = null;
             var selector;
@@ -132,14 +141,26 @@
                     }
 
                     // get existing volume for package
-                    pkxVolume = io.volumes.get(selector.uri);
-
+                    var packageId = selector.package + "/" + (selector.resource? selector.resource : "");
+                    pkxVolume = findVolume(selector);
 
                     // create new volume
-                    if (pkxVolume.length == 0) {
+                    if (!pkxVolume) {
                         pkxVolume = new self.PKXVolume(selector.uri, options);
                         pkxVolume.events.addEventListener(io.EVENT_VOLUME_INITIALIZATION_PROGRESS, progress);
+                        
+                        // add the volume already (during initialisation)
+                        var volAlreadyExists = volumes[packageId]? true : false;
+                        if (!volAlreadyExists) {
+                            volumes[packageId] = pkxVolume;
+                        }
+
                         pkxVolume.then(function (volume) {
+                            // delete temp vol
+                            if (volume.pkx.id != packageId && !volAlreadyExists) {
+                                delete volumes[packageId];
+                            }
+
                             // register volume
                             io.volumes.register(volume);
 
@@ -147,8 +168,7 @@
                         }, error);
                     }
                     else {
-                        pkxVolume = pkxVolume[0];
-                        getPackageDependencies(pkxVolume);
+                        pkxVolume.ready().then(getPackageDependencies).catch(error);
                     }
 
                     function getPackageDependencies(volume) {
@@ -1040,7 +1060,7 @@
                         }, openTar);
 
                         function openTar(err) {
-                            if (err && err.name != io.ERROR_UNSUPPORTED_STREAM) {
+                                if (err && err.name != io.ERROR_UNSUPPORTED_STREAM) {
                                 error(err);
                                 return;
                             }
@@ -1194,6 +1214,21 @@
 
             function notReady() {
                 return new Promise(function(resolve, refuse) { refuse(io.ERROR_VOLUME_NOT_READY); });
+            }
+
+            this.ready = function() {
+                return new Promise(function(resolve, refuse) { 
+                    own.events.addEventListener(io.EVENT_VOLUME_STATE_CHANGED, function(sender, state) {
+                        if (state == io.VOLUME_STATE_READY) { 
+                            var origThen = own.then;
+                            own.then = null;
+                            resolve(own);
+                            own.then = origThen;
+                        } else { 
+                                refuse(io.ERROR_VOLUME_NOT_READY);
+                        }
+                    })
+                });
             }
         };
 

@@ -1039,7 +1039,11 @@
                             error(new Error(self.ERROR_INVALID_PKX_VOLUME, "The gzip stream does not seem to contain a file."));
                         }, openTar);
 
-                        function openTar() {
+                        function openTar(err) {
+                            if (err.name != io.ERROR_UNSUPPORTED_STREAM) {
+                                error(err);
+                                return;
+                            }
                             // what is returned here is a stream that is in the tar format.
                             tarVolume = new tar.TarVolume(stream, packageId, options.strip? { "strip" : options.strip } : null);
                             tarVolume.events.addEventListener(io.EVENT_VOLUME_INITIALIZATION_PROGRESS, progress);

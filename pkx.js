@@ -1040,7 +1040,7 @@
                         }, openTar);
 
                         function openTar(err) {
-                            if (err.name != io.ERROR_UNSUPPORTED_STREAM) {
+                            if (err && err.name != io.ERROR_UNSUPPORTED_STREAM) {
                                 error(err);
                                 return;
                             }

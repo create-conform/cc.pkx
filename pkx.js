@@ -371,10 +371,16 @@
                                 }
                                 if (ext == "css") {
                                     if (typeof document !== "undefined") {
+                                        data += "\r\n/*# sourceURL=http://" + (pkxVolume.pkx.id + resource) + "*/";
                                         var style = document.createElement("style");
                                         style.rel = "stylesheet";
                                         style.type = "text/css";
-                                        style.text = data;
+                                        if (style.styleSheet) {
+                                            style.styleSheet.cssText = data;
+                                        }
+                                        else {
+                                            style.appendChild(document.createTextNode(data));
+                                        }
                                         try {
                                             document.head.appendChild(style);
                                         }
@@ -383,7 +389,7 @@
                                             return;
                                         }
                                     }
-                                    complete(null, null);
+                                    complete(data, dependencies);
                                 }
                             }, error);
                         }, error);

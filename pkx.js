@@ -35,6 +35,7 @@
         var processors = {};
         var repositories = [];
         var volumes = [];
+        var requested = {};
 
         var host;
         var event;
@@ -311,6 +312,14 @@
                         for (var a=0;a<arguments.length;a++) {
                             // dependency module
                             dependencies[a] = arguments[a];
+                        }
+
+                        if (!requested[pkxVolume.pkx.id + resource]) {
+                            requested[pkxVolume.pkx.id + resource] = true;
+                        }
+                        else {
+                            define.cache.waitFor(pkxVolume.pkx.id + (selector.resource || pkxVolume.pkx.id.substr(pkxVolume.pkx.id.length - 1) == "/"? selector.resource : "/"), complete);
+                            return;
                         }
 
                         pkxVolume.open(resource).then(function readDataFromResourceStream(stream) {
@@ -1356,7 +1365,7 @@
             "module": self
         });
     }
-
+    
     var singleton;
     (function (obj, factory) {
         var supported = false;

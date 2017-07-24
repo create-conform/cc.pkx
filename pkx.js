@@ -216,7 +216,7 @@
                                 }
 
                                 // skip circular, embedded dependencies
-                                if (embedded && selector.uri.scheme == "pkx") {
+                                if (embedded && selector.uri.scheme == "pkx" && (selector.uri.toString() == requests[d].package)) {
                                     requests[d] = null;
                                 }
 

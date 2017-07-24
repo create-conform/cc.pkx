@@ -216,7 +216,9 @@
                                 }
 
                                 // skip circular, embedded dependencies
-                                if (embedded && selector.uri.scheme == "pkx" && (selector.uri.toString() == requests[d].package)) {
+                                var selUri = selector.uri.toString();
+                                selUri = selUri.substr(0, selUri.indexOf("/",7)) || selector.uri.toString();
+                                if (embedded && selector.uri.scheme == "pkx" && selUri == "pkx:///" + volume.pkx.id) {
                                     requests[d] = null;
                                 }
 

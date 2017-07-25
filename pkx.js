@@ -1007,6 +1007,7 @@
             }
 
             var initializing = false;
+            var initialized = false;
             var idxLastSlash = uri.path.lastIndexOf("/");
             var isArchive = idxLastSlash != uri.path.length - 1;
             var tarVolume = null;
@@ -1042,9 +1043,13 @@
             this.events = new event.Emitter(this);
 
             this.then = function(resolve, refuse) {
-                if (initializing) {
+                if (initializing && !initialized) {
                     refuse(new Error(io.ERROR_VOLUME_NOT_READY, "Volume initialization already started."));
                     return;
+                }
+                else if (initialized) {
+                    resolve();
+                    return null;
                 }
                 initializing = true;
 
@@ -1231,10 +1236,11 @@
                 return new Promise(function(resolve, refuse) { 
                     own.events.addEventListener(io.EVENT_VOLUME_STATE_CHANGED, function(sender, state) {
                         if (state == io.VOLUME_STATE_READY) { 
+                            initialized = true;
                             var origThen = own.then;
                             own.then = null;
                             resolve(own);
-                            own.then = origThen;
+                            //own.then = origThen;
                         } else { 
                                 refuse(io.ERROR_VOLUME_NOT_READY);
                         }

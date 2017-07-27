@@ -15,6 +15,7 @@
     var PKX_SYSTEM = "pkx";
     var DEPENDENCY_PKX = PKX_SYSTEM;
     var DEPENDENCY_CONFIG = "configuration";
+    var DEPENDENCY_REQUIRER = "requirer";
 
     function PKX(pkx, module, configuration) {
         var self = this;
@@ -553,7 +554,7 @@
                 });
             }
         };
-        this.load.factory = function(module, factory, request) {
+        this.load.factory = function(module, factory, request, requirer) {
             // decorate dependencies
             var dependencies = module.dependencies.slice(0);
             var args = [];
@@ -588,6 +589,9 @@
                 if (!isNaN(d) && dependencies[d] == DEPENDENCY_CONFIG) {
                     dependencies[d] = request && request.configuration? request.configuration : (module.parameters.configuration? module.parameters.configuration : {});
                 }
+                if (!isNaN(d) && dependencies[d] == DEPENDENCY_REQUIRER) {
+                    dependencies[d] = requirer;
+                }
             }
 
             // add other dependencies (only numbered index)
@@ -618,7 +622,7 @@
                 configuration = configuration? "\ndefine.parameters.configuration = " + JSON.stringify(configuration, null, Array(INDENT_OFFSET + 1).join(" ")) + ";" : "";
 
                 // add package dependency
-                depStr += "\ndefine.parameters.dependencies = [ \"" + DEPENDENCY_PKX + "\", \"module\", \"" + DEPENDENCY_CONFIG + "\" ];";
+                depStr += "\ndefine.parameters.dependencies = [ \"" + DEPENDENCY_PKX + "\", \"module\", \"" + DEPENDENCY_CONFIG + "\", \"" + DEPENDENCY_REQUIRER + "\" ];";
                 depStr += "\ndefine.parameters.dependencies[0] = define.parameters.pkx;";
 
                 if (dependencies) {

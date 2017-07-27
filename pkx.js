@@ -317,10 +317,10 @@
                             dependencies[a] = arguments[a];
                         }
 
-                        if (!requested[pkxVolume.pkx.id + resource] || selector.raw) {
+                        if (!requested[pkxVolume.pkx.id + resource] && !selector.raw) {
                             requested[pkxVolume.pkx.id + resource] = true;
                         }
-                        else {
+                        else if (!selector.raw) {
                             define.cache.waitFor(pkxVolume.pkx.id + (selector.resource || pkxVolume.pkx.id.substr(pkxVolume.pkx.id.length - 1) == "/"? selector.resource : "/"), complete);
                             return;
                         }

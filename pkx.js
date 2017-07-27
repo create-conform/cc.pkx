@@ -317,7 +317,7 @@
                             dependencies[a] = arguments[a];
                         }
 
-                        if (!requested[pkxVolume.pkx.id + resource]) {
+                        if (!requested[pkxVolume.pkx.id + resource] || selector.raw) {
                             requested[pkxVolume.pkx.id + resource] = true;
                         }
                         else {

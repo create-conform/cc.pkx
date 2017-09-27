@@ -839,20 +839,20 @@
             this.ignoreDependencies = selector.ignoreDependencies || false;
             this.configuration = selector.configuration || null;
 
-            this.parseURI = function(u) {
-                return io.URI.parse(replaceVariables(u));
+            this.parseURI = function(u, namespaceSeperator) {
+                return io.URI.parse(replaceVariables(u, namespaceSeperator));
             };
 
-            function replaceVariables(u) {
+            function replaceVariables(u, namespaceSeperator) {
                 // add .pkx extension
-                var uriPKXName = own.package + (own.package.lastIndexOf(self.PKX_FILE_EXTENSION) != own.package.length - self.PKX_FILE_EXTENSION.length && own.isArchive ? self.PKX_FILE_EXTENSION : "");
+                var uriPKXName = (namespaceSeperator? own.package.replace(/\./g,namespaceSeperator) : own.package) + (own.package.lastIndexOf(self.PKX_FILE_EXTENSION) != own.package.length - self.PKX_FILE_EXTENSION.length && own.isArchive ? self.PKX_FILE_EXTENSION : "");
                 // replace variables
-                return u.replace(/\$NAME/g, own.name)
+                return u.replace(/\$NAME/g, (namespaceSeperator? own.name.replace(/\./g,namespaceSeperator) : own.name))
                     .replace(/\$PATCH/g, patchVersion)
                     .replace(/\$MINOR/g, minorVersion)
                     .replace(/\$MAJOR/g, majorVersion)
                     .replace(/\$PACKAGE/g, uriPKXName)
-                    .replace(/\$ID/g, own.package);
+                    .replace(/\$ID/g, (namespaceSeperator? own.package.replace(/\./g,namespaceSeperator) : own.package));
             }
 
             // find repository

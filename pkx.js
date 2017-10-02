@@ -847,8 +847,8 @@
                 // add .pkx extension
                 var uriPKXName = (namespaceSeperator? own.package.replace(/\./g,namespaceSeperator) : own.package) + (own.package.lastIndexOf(self.PKX_FILE_EXTENSION) != own.package.length - self.PKX_FILE_EXTENSION.length && own.isArchive ? self.PKX_FILE_EXTENSION : "");
                 // replace variables
-                return u.replace(/\$NAME/g, (namespaceSeperator? own.name.replace(/\./g,namespaceSeperator) : own.name))
-                    .replace(/\$NAME_NO_NS/g, (namespaceSeperator? own.name.replace(/\./g,namespaceSeperator) : own.name).substr(own.repository && own.repository.namespace && own.repository.namespace.length > 0? own.repository.namespace.length + 1 : 0))
+                return u.replace(/\$NAME_NO_NS/g, (namespaceSeperator? own.name.replace(/\./g,namespaceSeperator) : own.name).substr(own.repository && own.repository.namespace && own.repository.namespace.length > 0? own.repository.namespace.length + 1 : 0))
+                    .replace(/\$NAME/g, (namespaceSeperator? own.name.replace(/\./g,namespaceSeperator) : own.name))
                     .replace(/\$PATCH/g, patchVersion)
                     .replace(/\$MINOR/g, minorVersion)
                     .replace(/\$MAJOR/g, majorVersion)

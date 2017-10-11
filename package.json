@@ -1,22 +1,24 @@
 {
   "name": "cc.pkx",
-  "version": "0.1.42",
+  "version": "0.2.0",
   "title": "PKX Module Library",
   "description": "Library for loading PKX modules, and working with PKX packages.",
-  "main": "pkx.js",
-  "pkxDependencies": [
-    "cc.host.0.1",
-    "cc.io.0.1",
-    "cc.io.format.tar.0.1",
-    "cc.io.format.gzip.0.1",
-    "cc.log.0.1",
-    "cc.string.0.1",
-    "cc.object.0.1",
-    "cc.boolean.0.1",
-    "cc.array.0.1",
-    "cc.type.0.1",
-    "cc.version.0.1",
-    "cc.event.0.1",
-    "cc.validate.0.1"
-  ]
+  "pkx" : {
+    "main": "pkx.js",
+    "dependencies": [
+      "cc.host.0.2",
+      "cc.io.0.2",
+      "cc.io.format.tar.0.2",
+      "cc.io.format.gzip.0.2",
+      "cc.log.0.2",
+      "cc.string.0.2",
+      "cc.object.0.2",
+      "cc.boolean.0.2",
+      "cc.array.0.2",
+      "cc.type.0.2",
+      "cc.version.0.2",
+      "cc.event.0.2",
+      "cc.validate.0.2"
+    ]
+  }
 }

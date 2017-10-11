@@ -175,7 +175,7 @@
 
                     function getPackageDependencies(volume) {
                         var requests = [];
-                        var pkxDeps = volume.pkx.pkxDependencies;
+                        var pkxDeps = volume.pkx.pkx.dependencies;
                         if (selector.raw && selector.ignoreDependencies) {
                             getResourceFromVolume();
                             return;
@@ -280,25 +280,22 @@
                         }
                         else {
                             // get first matching main (by target)
-                            if (type.isString(pkxVolume.pkx.pkxMain)) {
-                                resource = pkxVolume.pkx.pkxMain;
+                            if (type.isString(pkxVolume.pkx.pkx.main)) {
+                                resource = pkxVolume.pkx.pkx.main;
                             }
-                            else if (pkxVolume.pkx.pkxMain) {
-                                for (var m in pkxVolume.pkx.pkxMain) {
-                                    if(pkxVolume.pkx.pkxMain[m].target) {
+                            else if (pkxVolume.pkx.pkx.main) {
+                                for (var m in pkxVolume.pkx.pkx.main) {
+                                    if(pkxVolume.pkx.pkx.main[m].target) {
                                         try {
-                                            validate(pkxVolume.pkx.pkxMain[m].target, object)
+                                            validate(pkxVolume.pkx.pkx.main[m].target, object)
                                                 .when(object.compare, host);
-                                            resource = pkxVolume.pkx.pkxMain[m].resource;
+                                            resource = pkxVolume.pkx.pkx.main[m].resource;
                                         }
                                         catch(e) {
                                             // ignore for now
                                         }
                                     }
                                 }
-                            }
-                            else {
-                                resource = pkxVolume.pkx.main;
                             }
                         }
 
@@ -341,7 +338,7 @@
 
                                 // wrap code for define
                                 if (ext == "js") {
-                                    data = self.load.wrap(data, pkxVolume.pkx, selector.resource, pkxVolume.pkx.pkxDependencies, selector.configuration, host.runtime != host.RUNTIME_NODEJS, pkxVolume.pkx.id + resource, selector.raw && selector.wrap);
+                                    data = self.load.wrap(data, pkxVolume.pkx, selector.resource, pkxVolume.pkx.pkx.dependencies, selector.configuration, host.runtime != host.RUNTIME_NODEJS, pkxVolume.pkx.id + resource, selector.raw && selector.wrap);
                                 }
 
                                 if (selector.raw || raw) {
@@ -924,24 +921,17 @@
                 .notNull();
             validate(descriptor.title, string, errName);
             validate(descriptor.description, string, errName);
-            validate(descriptor.keywords, array, errName)
-                .allow(array.STRING);
-            validate(descriptor.homepage, string, errName)
-                .when(string.isURL);
-            validate(descriptor.bugs, object, errName);
-            validate(descriptor.license, string, errName);
-            validate(descriptor.author, object, errName);
-            validate(descriptor.contributors, array, errName)
-                .allow(array.STRING);
-            validate(descriptor.main, string, errName)
-                .when(string.isPath);
-            validate(descriptor.pkxMain, array, errName)
-                .allow(array.STRING);
-            validate(descriptor.pkxDependencies, array, errName)
-                .allow(array.STRING, array.OBJECT);
-            validate(descriptor.target, object, errName);
+            validate(descriptor.pkx, object, errName)
+                .notNull();
+            //TODO
+            // validate pkx sub structure
 
-            this.name = descriptor.name;
+
+            //validate(descriptor.pkxDependencies, array, errName)
+            //    .allow(array.STRING, array.OBJECT);
+            //validate(descriptor.target, object, errName);
+
+            /*this.name = descriptor.name;
             this.version = descriptor.version;
             this.title = descriptor.title;
             this.description = descriptor.description;
@@ -962,42 +952,16 @@
             this.repository = !descriptor.repository || type.isString(descriptor.repository)? descriptor.repository : new self.PKXRepository(descriptor.repository);
             this.dependencies = descriptor.dependencies;
             this.pkxDependencies = descriptor.pkxDependencies;
-            this.target = descriptor.target;
+            this.target = descriptor.target;*/
 
             Object.defineProperty(this, "id", {
                 get : function() {
                     return own.name + "." + own.version;
                 }
             });
-        };
-        this.PKXPerson = function(person) {
-            var errName = self.ERROR_INVALID_PKX_DESCRIPTOR;
 
-            validate(person.name, string, errName).notNull();
-            validate(person.name, string, errName).when(string.isEmailRFC2822).notNull();
-            validate(person.name, string, errName).when(string.isURL);
-
-            this.name = person.name;
-            this.email = person.email;
-            this.url = person.url;
-        };
-        this.PKXBugs = function(bugs) {
-            var errName = self.ERROR_INVALID_PKX_DESCRIPTOR;
-
-            validate(bugs.email, string, errName).when(string.isEmailRFC2822).notNull();
-            validate(bugs.url, string, errName).when(string.isURL).notNull();
-
-            this.email = bugs.email;
-            this.url = bugs.url;
-        };
-        this.PKXRepository = function(repository) {
-            var errName = self.ERROR_INVALID_PKX_DESCRIPTOR;
-
-            validate(repository.type, string, errName).notNull();
-            validate(repository.url, string, errName).when(string.isURL).notNull();
-
-            this.type = repository.type;
-            this.url = repository.url;
+            // merge all descriptor properties
+            return type.merge(description, this);
         };
         this.PKXVolume = function(uri, options) {
             var own = this;

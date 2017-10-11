@@ -954,14 +954,17 @@
             this.pkxDependencies = descriptor.pkxDependencies;
             this.target = descriptor.target;*/
 
-            Object.defineProperty(this, "id", {
+            // merge all descriptor properties
+            own = type.merge(descriptor, this);
+
+            Object.defineProperty(own, "id", {
                 get : function() {
                     return own.name + "." + own.version;
                 }
             });
 
-            // merge all descriptor properties
-            return type.merge(description, this);
+            // return modified object
+            return own;
         };
         this.PKXVolume = function(uri, options) {
             var own = this;

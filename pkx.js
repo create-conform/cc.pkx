@@ -34,6 +34,7 @@
 
         var init = false;
         var processors = {};
+        var processing = {};
         var repositories = [];
         var volumes = [];
         var requested = {};
@@ -148,7 +149,7 @@
 
                     // create new volume
                     if (!pkxVolume) {
-                        pkxVolume = new self.PKXVolume(selector.uri, options);
+                        pkxVolume = new self.PKXVolume(selector.uri, options, selector.id);
                         pkxVolume.events.addEventListener(io.EVENT_VOLUME_INITIALIZATION_PROGRESS, progress);
                         
                         // add the volume already (during initialisation)
@@ -521,12 +522,37 @@
                 }
 
                 // find a processor
+                var selProcID = (typeof selector === "string")? selector : selector.package;
                 for (var p in processors) {
                     var promise = processors[p](selector);
                     if (!promise) {
                         continue;
                     }
-                    promise.then(fetchModule, error);
+                    if (processing[selProcID]) {
+                        // subscribe to existing processor
+                        processing[selProcID].addEventListener("ready", function(sender, a) { 
+                            // the selector uri could be updated, so propagate the update
+                            selector.uri = processing[selProcID].selector.uri;
+                            fetchModule(a); }
+                        );
+                        processing[selProcID].addEventListener("error", function(sender, e) { 
+                            error(e);
+                        } );
+                        return;
+                    }
+
+                    // create new event emitter
+                    processing[selProcID] = new event.Emitter(promise);
+                    processing[selProcID].selector = selector;
+                    
+                    function createReadyCallback(id) {
+                        return function(a) { processing[id].fire("ready", a); delete processing[id]; fetchModule(a); }
+                    }
+                    function createErrorCallback(id) {
+                        return function(e) { processing[id].fire("error", e); error(e); }
+                    }
+
+                    promise.then(createReadyCallback(selProcID), createErrorCallback(selProcID));
                     return;
                 }
 
@@ -884,7 +910,7 @@
                     }
                 }
                 else {
-                    own.uri = repository.url + selector.package;
+                    own.uri = repository.url + selector.package;//own.name; //
                 }
             }
             catch (e) {
@@ -966,7 +992,7 @@
             // return modified object
             return own;
         };
-        this.PKXVolume = function(uri, options) {
+        this.PKXVolume = function(uri, options, id) {
             var own = this;
 
             if (typeof uri == "string") {
@@ -983,7 +1009,7 @@
             var idxLastSlash = uri.path.lastIndexOf("/");
             var isArchive = idxLastSlash != uri.path.length - 1;
             var tarVolume = null;
-            var packageId = idxLastSlash >= 0 && isArchive? uri.path.substr(idxLastSlash + 1) : uri.path;
+            var packageId = id || (idxLastSlash >= 0 && isArchive? uri.path.substr(idxLastSlash + 1) : uri.path);
             if (packageId.length > self.PKX_FILE_EXTENSION.length && packageId.substr(packageId.length - self.PKX_FILE_EXTENSION.length) == self.PKX_FILE_EXTENSION) {
                 packageId = packageId.substr(0, packageId.length - self.PKX_FILE_EXTENSION.length);
             }
@@ -1201,7 +1227,9 @@
             }
 
             function notReady() {
-                return new Promise(function(resolve, refuse) { refuse(io.ERROR_VOLUME_NOT_READY); });
+                return new Promise(function(resolve, refuse) { 
+                    refuse(io.ERROR_VOLUME_NOT_READY);
+                });
             }
 
             this.ready = function() {
